@@ -1,24 +1,42 @@
 import React, {FC} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, TextInput, FlatList} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {RootStackParams, routeNames} from '../../navigator';
-import {theme} from '../../theme/theme';
+import {RootStackParams} from '../../navigator';
+import {styles} from './styles';
+import {useMainScreen} from './useMainScreen';
 
-type IMainScreenProps = NativeStackScreenProps<RootStackParams, 'Home'>;
+type MainScreenProps = NativeStackScreenProps<RootStackParams, 'Home'>;
 
-export const MainScreen: FC<IMainScreenProps> = ({route, navigation}) => {
+export const MainScreen: FC<MainScreenProps> = ({}) => {
+  const {
+    items,
+    searchTerm,
+    setSearchTerm,
+    onEndReached,
+    footerItem,
+    renderItem,
+  } = useMainScreen();
+
+  const changeTextHandler = async (newValue: string) => {
+    setSearchTerm(newValue);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Put your code here...</Text>
+      <TextInput
+        placeholder="Search items..."
+        value={searchTerm}
+        onChangeText={changeTextHandler}
+        style={styles.input}
+      />
+      <FlatList
+        data={items}
+        renderItem={renderItem}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.2}
+        ListFooterComponent={footerItem}
+      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    padding: theme.small,
-  },
-});
