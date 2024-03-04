@@ -1,23 +1,47 @@
 import React, {FC, useState} from 'react';
-import {View, StyleSheet, TextInput, FlatList, Text, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  FlatList,
+  Text,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {RootStackParams} from '../../navigator';
 import {theme} from '../../theme/theme';
 import {getItems} from '../../api';
 import {removeHtml} from '../../helpers';
+import {useInfiniteQuery} from '@tanstack/react-query';
 
 type MainScreenProps = NativeStackScreenProps<RootStackParams, 'Home'>;
 
 export const MainScreen: FC<MainScreenProps> = ({}) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [list, setList] = useState();
+
+  const {data, isLoading, isFetching, isError, fetchNextPage} =
+    useInfiniteQuery({
+      queryKey: ['items', searchTerm],
+      queryFn: ({pageParam}) => getItems(searchTerm, pageParam),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) => {
+        return allPages?.length + 1;
+      },
+    });
+
+  const isPagesNotEmpty = data?.pages?.length > 0;
+
+  const onEndReached = () => {
+    const isLastPage = data?.pages?.[data?.pages?.length - 1]?.length === 0;
+    if (!isFetching && !isLastPage) {
+      fetchNextPage();
+    }
+  };
 
   const changeTextHandler = async (newValue: string) => {
     setSearchTerm(newValue);
-
-    const res = await getItems(searchTerm, 1);
-    setList(res.items.materials);
   };
 
   return (
@@ -29,18 +53,26 @@ export const MainScreen: FC<MainScreenProps> = ({}) => {
         style={styles.input}
       />
       <FlatList
-        data={list}
+        data={data?.pages?.flatMap(page => page?.items?.materials || [])}
         renderItem={({item}) => {
           return (
-            <View style={{marginVertical: 10}}>
+            <TouchableOpacity
+              style={{marginVertical: theme.small}}
+              onPress={() => alert('Yo')}>
               <Image
-                style={{height: 250}}
-                source={{uri: item.firstPreviewImage.watermarked}}
+                style={{height: 250, marginVertical: theme.miniscule}}
+                source={{uri: item?.firstPreviewImage?.watermarked}}
               />
-              <Text>{removeHtml(item?.title)}</Text>
-              <Text>{item?.author?.details?.publicName}</Text>
-              <Text>{item?.price}</Text>
-            </View>
+              <Text style={{marginVertical: theme.miniscule}}>
+                {removeHtml(item?.title ?? '')}
+              </Text>
+              <Text style={{marginVertical: theme.miniscule}}>
+                {item?.author?.details?.publicName}
+              </Text>
+              <Text style={{marginVertical: theme.miniscule}}>
+                {item?.price}
+              </Text>
+            </TouchableOpacity>
           );
         }}
       />
