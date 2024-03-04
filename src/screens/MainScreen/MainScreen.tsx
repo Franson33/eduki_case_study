@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, {FC, useCallback, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -39,6 +40,17 @@ export const MainScreen: FC<MainScreenProps> = ({}) => {
       fetchNextPage();
     }
   };
+
+  const footerItem = useCallback(
+    () => (
+      <>
+        {isPagesNotEmpty && isFetching ? (
+          <ActivityIndicator size="small" />
+        ) : null}
+      </>
+    ),
+    [isFetching, isPagesNotEmpty],
+  );
 
   const changeTextHandler = async (newValue: string) => {
     setSearchTerm(newValue);
@@ -75,6 +87,9 @@ export const MainScreen: FC<MainScreenProps> = ({}) => {
             </TouchableOpacity>
           );
         }}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.2}
+        ListFooterComponent={footerItem}
       />
     </View>
   );
