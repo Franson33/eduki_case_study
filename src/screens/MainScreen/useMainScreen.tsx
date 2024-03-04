@@ -1,5 +1,5 @@
 import React, {useCallback, useState} from 'react';
-import {ActivityIndicator, Image, Text, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Text, TouchableOpacity} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {useInfiniteQuery} from '@tanstack/react-query';
 import {useNavigation} from '@react-navigation/native';

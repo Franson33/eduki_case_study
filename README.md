@@ -18,6 +18,10 @@ npm start
 yarn start
 ```
 
+## NOTES:
+
+To run this code for testing purposes, please add the token locally to the ./api/api.ts in your environment or configuration file.
+
 ## Step 2: Start your Application
 
 Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:

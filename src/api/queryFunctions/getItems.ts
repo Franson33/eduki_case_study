@@ -6,6 +6,8 @@ export const getItems = async (
   page: number,
   limit = 20,
 ) => {
+  // NOTE: A token was previously used directly from constants due to time constraints for the test task.
+  // To run this code for testing purposes, please add the token locally in your environment or configuration file.
   const headers = new Headers({
     Authorization: `Bearer ${TOKEN}`,
     'Content-Type': 'application/json',
