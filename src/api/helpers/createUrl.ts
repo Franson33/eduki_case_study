@@ -1,7 +1,5 @@
 export const createUrl = (baseUrl: string, params: any) => {
-  const url = new URL(baseUrl);
+  const searchParams = new URLSearchParams(params);
 
-  Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-
-  return url;
+  return `${baseUrl}?${searchParams.toString()}`;
 };

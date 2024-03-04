@@ -1,16 +1,16 @@
 import {baseUrl, TOKEN} from '../api';
 import {createUrl} from '..';
 
-const headers = new Headers({
-  Authorization: `Bearer ${TOKEN}`,
-  'Content-Type': 'application/json',
-});
-
 export const getItems = async (
   searchParam: string,
   page: number,
   limit = 20,
 ) => {
+  const headers = new Headers({
+    Authorization: `Bearer ${TOKEN}`,
+    'Content-Type': 'application/json',
+  });
+
   const requestParams = {
     limit: limit,
     p: page,
@@ -20,10 +20,18 @@ export const getItems = async (
 
   const url = createUrl(baseUrl, requestParams);
 
-  const result = await fetch(url, {
-    method: 'GET',
-    headers: headers,
-  });
+  try {
+    const response = await fetch(url, {method: 'GET', headers: headers});
 
-  return result;
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    return data.data;
+  } catch (err) {
+    console.error('Fetching items failed:', err);
+    throw err;
+  }
 };
