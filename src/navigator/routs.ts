@@ -5,5 +5,7 @@ export const routeNames = {
 
 export type RootStackParams = {
   [routeNames.HOME]: undefined;
-  [routeNames.DETAILS]: undefined;
+  [routeNames.DETAILS]: {
+    item: any;
+  };
 };

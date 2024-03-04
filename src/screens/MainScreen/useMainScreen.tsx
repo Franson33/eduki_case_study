@@ -1,13 +1,18 @@
 import React, {useCallback, useState} from 'react';
 import {ActivityIndicator, Image, Text, TouchableOpacity} from 'react-native';
 import {useInfiniteQuery} from '@tanstack/react-query';
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {routeNames, RootStackParams} from '../../navigator';
 import {getItems} from '../../api';
 import {removeHtml} from '../../helpers';
-import {theme} from '../../theme/theme';
 import {styles} from './styles';
 
 export const useMainScreen = () => {
   const [searchTerm, setSearchTerm] = useState('');
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
   const {data, isFetching, fetchNextPage} = useInfiniteQuery({
     queryKey: ['items', searchTerm],
@@ -27,6 +32,10 @@ export const useMainScreen = () => {
     }
   };
 
+  const pressHandler = item => {
+    navigation.navigate(routeNames.DETAILS, {item});
+  };
+
   const footerItem = useCallback(
     () => (
       <>
@@ -42,7 +51,7 @@ export const useMainScreen = () => {
     return (
       <TouchableOpacity
         style={styles.renderItemContainer}
-        onPress={() => alert('Yo')}>
+        onPress={() => pressHandler(item)}>
         <Image
           style={styles.renderItemImage}
           source={{uri: item?.firstPreviewImage?.watermarked}}
