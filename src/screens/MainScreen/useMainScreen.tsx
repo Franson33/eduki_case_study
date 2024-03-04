@@ -22,6 +22,7 @@ export const useMainScreen = () => {
     getNextPageParam: (lastPage, allPages) => {
       return allPages?.length + 1;
     },
+    enabled: !!searchTerm,
   });
 
   const isPagesNotEmpty = data?.pages?.length > 0;
