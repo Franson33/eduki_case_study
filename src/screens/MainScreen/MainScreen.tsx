@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {View, TextInput, FlatList} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {RootStackParams} from '../../navigator';
@@ -30,12 +31,13 @@ export const MainScreen: FC<MainScreenProps> = ({}) => {
         onChangeText={changeTextHandler}
         style={styles.input}
       />
-      <FlatList
+      <FlashList
         data={items}
         renderItem={renderItem}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.2}
         ListFooterComponent={footerItem}
+        estimatedItemSize={300}
       />
     </View>
   );
