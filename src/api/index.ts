@@ -1,1 +1,1 @@
-export {fetchHandler} from './helpers/fetchHandler';
+export {createUrl} from './helpers/createUrl';
